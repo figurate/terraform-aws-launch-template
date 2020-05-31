@@ -1,0 +1,29 @@
+#cloud-config
+packages:
+  - fail2ban
+  - unattended-upgrades
+  - ntpdate
+
+timezone: ${TimeZone}
+
+ntp:
+  enabled: true
+  servers:
+    - 0.au.pool.ntp.org
+    - 1.au.pool.ntp.org
+    - 2.au.pool.ntp.org
+    - 3.au.pool.ntp.org
+
+users:
+  - name: ${AuthorizedUserName}
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - ${AuthorizedUserSSHKey}
+
+runcmd:
+  - "printf '\nClientAliveInterval 100\nClientAliveCountMax 0' >> /etc/ssh/sshd_config"
+  - service ssh restart
+  - curl -O https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+  - dpkg -i -E ./amazon-cloudwatch-agent.deb

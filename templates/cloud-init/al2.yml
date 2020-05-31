@@ -1,0 +1,88 @@
+#cloud-config
+packages:
+  - java
+  - nfs-utils
+  - chrony
+
+timezone: ${TimeZone}
+
+users:
+  - name: ${AuthorizedUserName}
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - ${AuthorizedUserSSHKey}
+  - name: apachesling
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+
+write_files:
+  - content: |
+      {
+        "logs": {
+            "logs_collected": {
+                "files": {
+                    "collect_list": [
+                        {
+                            "file_path": "/opt/sling/sling/logs/access.log",
+                            "log_group_name": "${SlingHostname}-access-log",
+                            "log_stream_name": "{instance_id}"
+                        },
+                        {
+                            "file_path": "/opt/sling/sling/logs/request.log",
+                            "log_group_name": "${SlingHostname}-request-log",
+                            "log_stream_name": "{instance_id}"
+                        },
+                        {
+                            "file_path": "/opt/sling/sling/logs/error.log",
+                            "log_group_name": "${SlingHostname}-error-log",
+                            "log_stream_name": "{instance_id}"
+                        }
+                    ]
+                }
+            }
+        },
+        "metrics": {
+            "append_dimensions": {
+                "AutoScalingGroupName": "$${aws:AutoScalingGroupName}",
+                "ImageId": "$${aws:ImageId}",
+                "InstanceId": "$${aws:InstanceId}",
+                "InstanceType": "$${aws:InstanceType}"
+            },
+            "metrics_collected": {
+                "mem": {
+                    "measurement": [
+                        "mem_used_percent"
+                    ],
+                    "metrics_collection_interval": 60
+                },
+                "swap": {
+                    "measurement": [
+                        "swap_used_percent"
+                    ],
+                    "metrics_collection_interval": 60
+                }
+            }
+        }
+      }
+    path: /opt/aws/amazon-cloudwatch-agent/etc/config.json
+
+mounts:
+  - [ swap, none, swap, sw, 0, 0]
+
+swap:
+  filename: /var/cache/swap/swapfile
+  size: auto
+  maxsize: 2147483648
+
+runcmd:
+  # Configure SSH
+  - "printf '\nClientAliveInterval 100\nClientAliveCountMax 0' >> /etc/ssh/sshd_config"
+  - service sshd restart
+  - systemctl start chronyd && systemctl enable chronyd
+  #  Cloudwatch Agent install
+  - curl -O https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+  - rpm -U amazon-cloudwatch-agent.rpm
+  - /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json -s
