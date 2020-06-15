@@ -1,3 +1,7 @@
+variable "name" {
+  description = "Name to associate with the launch template"
+}
+
 variable "template_type" {
   description = "A predefined template type used to configure user data, etc."
   default     = "ecs_optimized"
@@ -7,9 +11,9 @@ variable "cluster_name" {
   description = "Name of the ECS cluster the node belongs to"
 }
 
-variable "image_name" {
-  description = "Name filter for EC2 AMI"
-  default     = "amzn2-ami-ecs-hvm-2.0.????????-x86_64-ebs"
+variable "image" {
+  description = "Predefined filter for EC2 AMI"
+  default     = "ecs-optimized"
 }
 
 variable "image_owner" {
@@ -25,4 +29,9 @@ variable "instance_type" {
 variable "iam_instance_profile" {
   description = "Name of IAM instance profile associated with launched instances"
   default     = "ecs-clusternode-instanceprofile"
+}
+
+variable "security_groups" {
+  description = "List of security group names to attach"
+  default     = []
 }
