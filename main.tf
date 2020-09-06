@@ -52,4 +52,8 @@ resource "aws_launch_template" "launch_template" {
       Name = var.name
     }
   }
+
+  metadata_options {
+    http_tokens = "required"
+  }
 }
