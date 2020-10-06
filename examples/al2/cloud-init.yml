@@ -27,17 +27,17 @@ write_files:
                     "collect_list": [
                         {
                             "file_path": "/opt/sling/sling/logs/access.log",
-                            "log_group_name": "${SlingHostname}-access-log",
+                            "log_group_name": "${Hostname}-access-log",
                             "log_stream_name": "{instance_id}"
                         },
                         {
                             "file_path": "/opt/sling/sling/logs/request.log",
-                            "log_group_name": "${SlingHostname}-request-log",
+                            "log_group_name": "${Hostname}-request-log",
                             "log_stream_name": "{instance_id}"
                         },
                         {
                             "file_path": "/opt/sling/sling/logs/error.log",
-                            "log_group_name": "${SlingHostname}-error-log",
+                            "log_group_name": "${Hostname}-error-log",
                             "log_stream_name": "{instance_id}"
                         }
                     ]
