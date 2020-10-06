@@ -12,8 +12,8 @@ variable "cluster_name" {
 }
 
 variable "image" {
-  description = "Predefined filter for EC2 AMI"
-  default     = "ecs-optimized"
+  description = "Name filter for EC2 AMI"
+  default     = "amzn2-ami-ecs-hvm-2.0.????????-x86_64-ebs"
 }
 
 variable "image_owner" {
@@ -34,4 +34,11 @@ variable "iam_instance_profile" {
 variable "security_groups" {
   description = "List of security group names to attach"
   default     = []
+}
+
+locals {
+  userdata = {
+    ecs-optimized           = data.template_file.ecs_optimized.rendered
+    ecs-optimized-spotfleet = data.template_file.ecs_optimized_spotfleet.rendered
+  }
 }

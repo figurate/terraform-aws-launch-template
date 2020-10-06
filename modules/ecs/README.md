@@ -4,7 +4,10 @@ No requirements.
 
 ## Providers
 
-No provider.
+| Name | Version |
+|------|---------|
+| aws | n/a |
+| template | n/a |
 
 ## Inputs
 
@@ -12,7 +15,7 @@ No provider.
 |------|-------------|------|---------|:--------:|
 | cluster\_name | Name of the ECS cluster the node belongs to | `any` | n/a | yes |
 | iam\_instance\_profile | Name of IAM instance profile associated with launched instances | `string` | `"ecs-clusternode-instanceprofile"` | no |
-| image | Predefined filter for EC2 AMI | `string` | `"ecs-optimized"` | no |
+| image | Name filter for EC2 AMI | `string` | `"amzn2-ami-ecs-hvm-2.0.????????-x86_64-ebs"` | no |
 | image\_owner | AMI image owner (leave blank for current account) | `string` | `"591542846629"` | no |
 | instance\_type | EC2 instance type | `string` | `"t3.micro"` | no |
 | name | Name to associate with the launch template | `any` | n/a | yes |

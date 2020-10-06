@@ -1,23 +1,10 @@
 /**
  * # ![AWS](aws-logo.png) Launch Template
  *
+ * ![AWS Launch Template](aws_launch_template.png)
+ *
  * Purpose: Blueprints for AWS Launch Templates.
  */
-data "aws_caller_identity" "current" {}
-
-data "aws_ami" "image" {
-  filter {
-    name   = "name"
-    values = [local.images[var.image]]
-  }
-  filter {
-    name   = "state"
-    values = ["available"]
-  }
-  most_recent = true
-  owners      = [replace(var.image_owner, "/\\A\\z/", data.aws_caller_identity.current.account_id)]
-}
-
 data "aws_security_group" "security_groups" {
   count = length(var.security_groups)
   filter {
@@ -28,9 +15,9 @@ data "aws_security_group" "security_groups" {
 
 resource "aws_launch_template" "launch_template" {
   name_prefix   = "${var.name}-"
-  image_id      = data.aws_ami.image.id
+  image_id      = var.image_id
   instance_type = var.instance_type
-  user_data     = base64encode(local.user_data[var.template_type])
+  user_data     = var.user_data
 
   network_interfaces {
     associate_public_ip_address = false
@@ -54,6 +41,7 @@ resource "aws_launch_template" "launch_template" {
   }
 
   metadata_options {
-    http_tokens = "required"
+    http_endpoint = "enabled"
+    http_tokens   = "required"
   }
 }
