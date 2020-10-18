@@ -17,7 +17,7 @@ resource "aws_launch_template" "launch_template" {
   name_prefix   = "${var.name}-"
   image_id      = var.image_id
   instance_type = var.instance_type
-  user_data     = var.user_data
+  user_data     = base64encode(var.user_data)
 
   network_interfaces {
     associate_public_ip_address = false

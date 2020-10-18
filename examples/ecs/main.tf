@@ -17,7 +17,7 @@ module "launch_template" {
   source = "../.."
 
   name                 = var.name
-  user_data            = base64encode(local.userdata[var.template_type])
+  user_data            = local.userdata[var.template_type]
   image_id             = data.aws_ami.image.image_id
   instance_type        = var.instance_type
   iam_instance_profile = var.iam_instance_profile
