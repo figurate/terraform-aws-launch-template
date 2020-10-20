@@ -46,7 +46,8 @@ format:
 		$(TERRAFORM) fmt -list=true ./modules/cloud-init && \
 		$(TERRAFORM) fmt -list=true ./examples/ecs && \
 		$(TERRAFORM) fmt -list=true ./examples/al2 && \
-		$(TERRAFORM) fmt -list=true ./examples/ubuntu
+		$(TERRAFORM) fmt -list=true ./examples/ubuntu && \
+		$(TERRAFORM) fmt -list=true ./examples/s3fs
 
 example:
 	$(TERRAFORM) init examples/$(EXAMPLE) && $(TERRAFORM) plan -input=false examples/$(EXAMPLE)
