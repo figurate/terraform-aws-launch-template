@@ -25,3 +25,13 @@ variable "security_groups" {
   description = "List of security group names to attach"
   default     = []
 }
+
+variable "associate_public_ip_address" {
+  description = "Allocation a public IP address (required for Internet access)"
+  default     = true
+}
+
+variable "metadata_v2" {
+  description = "Enforce metadata version 2"
+  default     = true
+}

@@ -18,9 +18,11 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| associate\_public\_ip\_address | Allocation a public IP address (required for Internet access) | `bool` | `true` | no |
 | iam\_instance\_profile | Name of IAM instance profile associated with launched instances | `any` | `null` | no |
 | image\_id | AMI image identifier | `any` | n/a | yes |
 | instance\_type | EC2 instance type | `string` | `"t3.micro"` | no |
+| metadata\_v2 | Enforce metadata version 2 | `bool` | `true` | no |
 | name | Name to associate with the launch template | `any` | n/a | yes |
 | security\_groups | List of security group names to attach | `list` | `[]` | no |
 | user\_data | Encoded user data | `any` | `null` | no |
