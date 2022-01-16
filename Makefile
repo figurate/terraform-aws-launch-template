@@ -12,8 +12,8 @@ clean:
 
 validate:
 	$(TERRAFORM) init && $(TERRAFORM) validate && \
-		$(TERRAFORM) init modules/cloud-init && $(TERRAFORM) validate modules/cloud-init && \
-		$(TERRAFORM) init modules/ansible && $(TERRAFORM) validate modules/ansible
+		$(TERRAFORM) -chdir=modules/cloud-init init && $(TERRAFORM) -chdir=modules/cloud-init validate && \
+		$(TERRAFORM) -chdir=modules/ansible init && $(TERRAFORM) -chdir=modules/ansible validate
 
 test: validate
 	$(CHECKOV) -d /work && \
