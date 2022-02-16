@@ -28,7 +28,7 @@ variable "security_groups" {
 
 variable "associate_public_ip_address" {
   description = "Allocation a public IP address (required for Internet access)"
-  default     = true
+  default     = false
 }
 
 variable "metadata_v2" {

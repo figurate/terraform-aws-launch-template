@@ -20,6 +20,7 @@ resource "aws_launch_template" "launch_template" {
   user_data     = base64encode(var.user_data)
 
   network_interfaces {
+    #checkov:skip=CKV_AWS_88:Default does not allocate public IP
     associate_public_ip_address = var.associate_public_ip_address
     security_groups             = data.aws_security_group.security_groups.*.id
   }
@@ -42,6 +43,7 @@ resource "aws_launch_template" "launch_template" {
 
   #checkov:skip=CKV_AWS_79:Default requires metadata v2
   metadata_options {
-    http_tokens = var.metadata_v2 ? "required" : "optional"
+    http_endpoint = "enabled"
+    http_tokens   = var.metadata_v2 ? "required" : "optional"
   }
 }
