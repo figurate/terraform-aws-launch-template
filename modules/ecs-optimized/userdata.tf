@@ -20,3 +20,10 @@ EOF
     ClusterName = var.cluster_name
   }
 }
+
+locals {
+  userdata = {
+    ecs-optimized           = data.template_file.ecs_optimized.rendered
+    ecs-optimized-spotfleet = data.template_file.ecs_optimized_spotfleet.rendered
+  }
+}

@@ -35,10 +35,3 @@ variable "security_groups" {
   description = "List of security group names to attach"
   default     = []
 }
-
-locals {
-  userdata = {
-    ecs-optimized           = data.template_file.ecs_optimized.rendered
-    ecs-optimized-spotfleet = data.template_file.ecs_optimized_spotfleet.rendered
-  }
-}
