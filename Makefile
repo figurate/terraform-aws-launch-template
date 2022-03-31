@@ -2,16 +2,17 @@ SHELL:=/bin/bash
 include .env
 
 EXAMPLE=$(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
+VERSION=$(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
 
-.PHONY: all clean validate test docs format
+.PHONY: all clean validate test diagram docs format release
 
-all: validate test docs format
+all: test docs format
 
 clean:
 	rm -rf .terraform/
 
 validate:
-	$(TERRAFORM) init -reconfigure && $(TERRAFORM) validate
+	$(TERRAFORM) init -upgrade && $(TERRAFORM) validate
 
 test: validate
 	$(CHECKOV) -d /work
@@ -27,11 +28,14 @@ docs: diagram
 
 format:
 	$(TERRAFORM) fmt -list=true ./ && \
-		$(TERRAFORM) fmt -list=true ./modules/cloud-init && \
+		$(TERRAFORM) fmt -list=true ./modules/cloud-init -upgrade && \
 		$(TERRAFORM) fmt -list=true ./modules/ecs-optimized && \
 		$(TERRAFORM) fmt -list=true ./examples/al2 && \
 		$(TERRAFORM) fmt -list=true ./examples/ubuntu && \
 		$(TERRAFORM) fmt -list=true ./examples/s3fs
 
 example:
-	$(TERRAFORM) init examples/$(EXAMPLE) && $(TERRAFORM) plan -input=false examples/$(EXAMPLE)
+	$(TERRAFORM) -chdir=examples/$(EXAMPLE) init -upgrade && $(TERRAFORM) -chdir=examples/$(EXAMPLE) plan -input=false
+
+release: test
+	git tag $(VERSION) && git push --tags
