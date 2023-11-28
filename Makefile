@@ -12,7 +12,7 @@ clean:
 	rm -rf .terraform/
 
 validate:
-	$(TERRAFORM) init -upgrade && $(TERRAFORM) validate
+	$(TERRAFORM) init  && $(TERRAFORM) validate
 
 test: validate
 	$(CHECKOV) -d /work
@@ -27,15 +27,10 @@ docs: diagram
 		$(TERRAFORM_DOCS) markdown ./modules/ecs-optimized >./modules/ecs-optimized/README.md
 
 format:
-	$(TERRAFORM) fmt -list=true ./ && \
-		$(TERRAFORM) fmt -list=true ./modules/cloud-init -upgrade && \
-		$(TERRAFORM) fmt -list=true ./modules/ecs-optimized && \
-		$(TERRAFORM) fmt -list=true ./examples/al2 && \
-		$(TERRAFORM) fmt -list=true ./examples/ubuntu && \
-		$(TERRAFORM) fmt -list=true ./examples/s3fs
+	$(TERRAFORM) fmt -list=true -recursive
 
 example:
-	$(TERRAFORM) -chdir=examples/$(EXAMPLE) init -upgrade && $(TERRAFORM) -chdir=examples/$(EXAMPLE) plan -input=false
+	$(TERRAFORM) -chdir=examples/$(EXAMPLE) init  && $(TERRAFORM) -chdir=examples/$(EXAMPLE) plan -input=false
 
 release: test
 	git tag $(VERSION) && git push --tags
